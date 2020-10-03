@@ -22,7 +22,7 @@ function Main() {
 
     return (
         <>
-        <h1>Netflix</h1>
+        <h2>Netflix</h2>
         <LineGrid>
             {search.length ? (
                 search.map( result => (
