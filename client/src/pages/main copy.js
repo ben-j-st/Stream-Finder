@@ -4,6 +4,8 @@ import LineGrid from "../components/LineGrid"
 import GridImage from "../components/gridImage"
 
 function Main(props) {
+
+    const navRef = React.useRef()
     //the search value is props.search
 
     // used to store the netflix data in an array to be mapped to the database for faster loading 
@@ -29,11 +31,28 @@ function Main(props) {
         API.saveNetflix()
         .then(console.log("we have success"))
     }
+
+    function handleNav(direction) {
+        if (direction === "left") {
+            navRef.current.scrollLeft -= 200
+        } else {
+            navRef.current.scrollLeft += 200
+        }
+    }
   
     return (
         <>
         <h2>Netflix</h2>
         <LineGrid>
+            <button
+            onClick={() => handleNav("left")
+            }>
+                prev
+            </button>
+            <div style={{
+                whiteSpace: "nowrap",
+                overflow: "auto"
+            }} ref={navRef}>
             {netflix.length ? (
                 netflix.map( result => (
                     <GridImage 
@@ -45,6 +64,12 @@ function Main(props) {
             ) : (
                 <h1>Failed to get results</h1>
             )}
+            </div>
+            <button
+            onClick={() => handleNav("right")
+            }>
+                next
+            </button>
         </LineGrid>
         </>
     )
