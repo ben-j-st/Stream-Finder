@@ -65,26 +65,8 @@ export default function SignUp() {
                         lastName: newUser.lastName,
                         email: newUser.email,
                         password: newUser.password
-                    })
-                    .then( res => {
-                        console.log(res)
-                        const response = res.data
-
-                        // setUser({
-                        //     ...user,
-                        //     firstName: response.firstName,
-                        //     lastName: response.lastName,
-                        //     email: response.email,
-                        //     isLoggedOn: true
-                        // })
-                    })
-                    .then(() => {
-                        if (user.isLoggedOn === true) {
-                            history.push("/")
-                        }
-                    })
+                    }).then(res => console.log(res))
                     .catch(err => console.error(err))
-                    console.log("we successful")
                 }
             } else {   
                 // error message display email doesnt seem like a correct email address
