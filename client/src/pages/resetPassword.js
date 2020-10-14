@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
     const classes = useStyles();
 
-    const [userData, setUserData] = React.useState({
+    const [user, setUser] = React.useState({
         password: "",
         confirmPassword: "",
         email: ""
@@ -35,9 +35,9 @@ export default function SignIn() {
     function resetPassword(event) {
         event.preventDefault();
 
-        if (userData.password && userData.confirmPassword < 8) {
+        if (user.password && user.confirmPassword < 8) {
             // display error about userData length
-        } else if (userData.password === userData.confirmPassword) {
+        } else if (user.password === user.confirmPassword) {
             // do the function about password stuff
         } else {
             // something unexpected
@@ -55,6 +55,11 @@ export default function SignIn() {
         event.preventDefault();
     }
 
+    function handleInputChange(event) {
+        const { name, value } = event.target
+        setUser({...user, [name]: value})
+    }
+
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -64,7 +69,7 @@ export default function SignIn() {
             </Typography>
             <form className={classes.form} noValidate>
             
-            { userData.email ? (
+            { user.email ? (
                 <>
                     <TextField
                         variant="outlined"
@@ -72,6 +77,9 @@ export default function SignIn() {
                         required
                         fullWidth
                         name="password"
+                        autoComplete="current-password"
+                        value={user.password}
+                        onChange={handleInputChange}
                         label="New Password"
                         type="password"
                     />
@@ -81,6 +89,9 @@ export default function SignIn() {
                         required
                         fullWidth
                         name="confirmPassword"
+                        autoComplete="second-password"
+                        onChange={handleInputChange}
+                        value={user.confirmPassword}
                         label="Confirm Password"
                         type="password"
                     />
@@ -103,6 +114,9 @@ export default function SignIn() {
                         required
                         fullWidth
                         name="email"
+                        autoComplete="email"
+                        value={user.email}
+                        onChange={handleInputChange}
                         label="Email Address"
                         autoFocus
                     />

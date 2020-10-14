@@ -10,6 +10,11 @@ import Container from '@material-ui/core/Container';
 
 import { Link } from "react-router-dom";
 
+import { useHistory } from "react-router-dom";
+
+import { UserContext } from "../util/userContext";
+
+import API from "../util/API";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -29,16 +34,68 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
+    const history = useHistory();
     
-    const [userData, setUserData] = React.useState({
+    const [newUser, setNewUser]= React.useState({
         firstName: "",
         lastName: "",
         email: "",
         password: ""
     })
+
+    const {user, setUser } = React.useContext(UserContext)
     
     function handleSubmit(event) {
-        
+        event.preventDefault()
+
+        let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        if (newUser.firstName.length === 0 ) {
+            // error message display firstName is required
+            console.log("we need a first name ")
+        } else {
+            if (newUser.email.match(mailFormat)) {
+                console.log("email validation worked")
+                if (newUser.password < 9) {
+                    // error message display password is to short
+                    console.log("password to short")
+                } else {
+                    API.createUser({
+                        firstName: newUser.firstName,
+                        lastName: newUser.lastName,
+                        email: newUser.email,
+                        password: newUser.password
+                    })
+                    .then( res => {
+                        console.log(res)
+                        const response = res.data
+
+                        // setUser({
+                        //     ...user,
+                        //     firstName: response.firstName,
+                        //     lastName: response.lastName,
+                        //     email: response.email,
+                        //     isLoggedOn: true
+                        // })
+                    })
+                    .then(() => {
+                        if (user.isLoggedOn === true) {
+                            history.push("/")
+                        }
+                    })
+                    .catch(err => console.error(err))
+                    console.log("we successful")
+                }
+            } else {   
+                // error message display email doesnt seem like a correct email address
+                console.log("email validation failed")
+            }
+        }
+    }
+
+    function handleInputChange(event) {
+        const { name, value } = event.target
+        setNewUser({...newUser, [name]: value})
     }
     
     return (
@@ -55,12 +112,21 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
+                                name="firstName"
+                                value={newUser.firstName}
+                                autoComplete="first-name"
+                                onChange={handleInputChange}
                                 label="First Name"
                                 autoFocus
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                fullWidth
+                                name="lastName"
+                                autoComplete="last-name"
+                                value={newUser.lastName}
+                                onChange={handleInputChange}
                                 variant="outlined"
                                 label="Last Name"
                             />
@@ -70,6 +136,10 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
+                                name="email"
+                                autoComplete="email"
+                                value={newUser.email}
+                                onChange={handleInputChange}
                                 label="Email Address"
                             />
                         </Grid>
@@ -78,6 +148,10 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
+                                name="password"
+                                autoComplete="current-password"
+                                value={newUser.password}
+                                onChange={handleInputChange}
                                 label="Password"
                                 type="password"
                             />

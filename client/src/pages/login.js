@@ -8,7 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { useHistory } from "react-router-dom";
+
+import { UserContext } from "../util/userContext"
+
 import { Link } from "react-router-dom";
+import API from '../util/API';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,13 +31,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
-  const classes = useStyles();
+export default function SignIn(props) {
+    const classes = useStyles();
+    const history = useHistory();
 
-    const [userData, setUserData] = React.useState({
+    const [login, setLogin] = React.useState({
         email: "",
         password: ""
     })
+
+    const {user, setUser } = React.useContext(UserContext)
+
+    function handleInputChange(event) {
+        const { name, value } = event.target
+        setLogin({...login, [name]: value})
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+
+        API.login({
+            email: login.email,
+            password: login.password
+        })
+        .then( res => {
+            const response = res.data
+            console.log(res.data)
+            setUser({
+                ...user,
+                firstName: response.firstName,
+                lastName: response.lastName,
+                email: response.email,
+                isLoggedOn: true
+            })
+        })
+        .then(history.push("/"))
+        .catch(err => console.error(err))
+    }
+    
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -46,6 +82,10 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
+                autoComplete="email"
+                name="email"
+                value={login.email}
+                onChange={handleInputChange}
                 label="Email Address"
                 autoFocus
             />
@@ -54,6 +94,10 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
+                name="password"
+                autoComplete= "current-password"
+                value={login.password}
+                onChange={handleInputChange}
                 label="Password"
                 type="password"
 
@@ -64,6 +108,7 @@ export default function SignIn() {
                 fullWidth
                 variant="contained"
                 color="primary"
+                onClick={handleLogin}
                 className={classes.submit}
             >
                 Sign In

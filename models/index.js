@@ -1,3 +1,4 @@
 module.exports = {
-    Netflix: require("./netflix")
+    Netflix: require("./netflix"),
+    User: require("./user")
 }

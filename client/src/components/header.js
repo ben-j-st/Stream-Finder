@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button'
 
 import { Link } from "react-router-dom"
 
+import { UserContext } from "../util/userContext"
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -64,18 +66,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchAppBar(props) {
+export default function SearchAppBar() {
     const classes = useStyles();
     
-    const [navSearch, setNavSearch] = React.useState("")
+    const [search, setSearch] = React.useState("")
+
+    const {user, setUser } = React.useContext(UserContext)
+
+    // use to test is the user object is changed
+    // React.useEffect(() => {
+    //     console.log(user)
+    // }, [user] );
 
     const updateSearch = (event) => {
         event.preventDefault();
-        props.setSearch(navSearch)
-        console.log(navSearch) 
+        setUser({...user, search: search})
     }
 
-    const isLoggedIn = props.user.isLoggedIn
+    const isLoggedOn = user.isLoggedOn;
 
     return (
         <div className={classes.root}>
@@ -86,7 +94,7 @@ export default function SearchAppBar(props) {
                     </Typography>
                     
 
-                        {isLoggedIn ? (
+                        {isLoggedOn ? (
                             <>
                                 <div className={classes.search}>
                                     <div className={classes.searchIcon}>
@@ -94,8 +102,8 @@ export default function SearchAppBar(props) {
                                     </div>
                                     <InputBase
                                         placeholder="Search…"
-                                        value={navSearch}
-                                        onChange={e => setNavSearch(e.target.value)}
+                                        value={search}
+                                        onChange={e => setSearch(e.target.value)}
                                         classes={{
                                             root: classes.inputRoot,
                                             input: classes.inputInput,
@@ -112,7 +120,7 @@ export default function SearchAppBar(props) {
                                 </Button>
                                 <div style={{
                                     marginLeft: "10px"
-                                }}>Welcome {props.user.username}</div>
+                                }}>Welcome {user.firstName}</div>
                             </>
                         ): (
                             <>
