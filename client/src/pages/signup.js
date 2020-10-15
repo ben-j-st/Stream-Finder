@@ -64,9 +64,27 @@ export default function SignUp() {
                         firstName: newUser.firstName,
                         lastName: newUser.lastName,
                         email: newUser.email,
-                        password: newUser.password
-                    }).then(res => console.log(res))
-                    .catch(err => console.error(err))
+                        password: newUser.password,
+                        searchHistory: []
+                    })
+                    .then(res => {
+                        console.log(res.data)
+                        const response = res.data
+                        if (response.email === 1) {
+                            alert("Same email has been used")
+                        } else {
+                            // user data updated to reflect logged in user
+                            setUser({
+                                ...user,
+                                firstName: response.firstName,
+                                lastName: response.lastName,
+                                email: response.email,
+                                isLoggedOn: true,
+                            })
+                        }
+                    })
+                    .then(history.push("/"))
+                    .catch(err => console.log(err))
                 }
             } else {   
                 // error message display email doesnt seem like a correct email address
