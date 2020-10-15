@@ -11,7 +11,14 @@ module.exports = {
                 console.log("successfully created the user")
                 res.json(dbModel)
             })
-          .catch(err => res.status(422).json(err));
+            .catch(err => {
+                if (err.code === 11000) {
+                    res.json(err.keyPattern)
+                }
+                else {
+                    res.status(422).json(err)
+                }
+            });
     },
 
     findOne: function(req, res) {
