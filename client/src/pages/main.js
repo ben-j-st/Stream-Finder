@@ -9,6 +9,8 @@ function Main(props) {
     // used to store the netflix data in an array to be mapped to the database for faster loading 
     const [netflix, setNetflix] = useState([])
 
+    const [amazon, setAmazon] = useState([])
+
     // should run only when search is entered
     useEffect(() => {
         onLoad()
@@ -20,24 +22,46 @@ function Main(props) {
         .then(res => {
             setNetflix(res.data)
         })
+        API.getAmazon()
+        .then(res => {
+            setAmazon(res.data)
+        })
     }
   
     return (
         <>
-        <h2>Netflix</h2>
-        <LineGrid>
-            {netflix.length ? (
-                netflix.map( result => (
-                    <GridImage 
-                    key={result.netflixid}
-                    img={result.image}
-                    title={result.title}
-                    />
-                ))
-            ) : (
-                <h1>Failed to get results</h1>
-            )}
-        </LineGrid>
+            <h2>Netflix</h2>
+            <LineGrid>
+                {netflix.length ? (
+                    netflix.map( result => (
+                        <GridImage 
+                        key={result.netflixid}
+                        img={result.image}
+                        title={result.title}
+                        />
+                    ))
+                ) : (
+                    <h1>Failed to get results</h1>
+                )}
+            </LineGrid>
+
+            <h2>Amazon Prime</h2>
+            <LineGrid>
+                {amazon.length ? (
+                    amazon.map( result => (
+                        <GridImage 
+                        key={result._id}
+                        img={result.Poster}
+                        title={result.Title}
+                        />
+                    ))
+                ) : (
+                    <h1>Failed to get results</h1>
+                )}
+            </LineGrid>
+            <div className="spaceBuffer" style={{
+                marginBottom: "100px"
+            }}/>
         </>
     )
 }
