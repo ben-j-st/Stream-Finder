@@ -10,7 +10,7 @@ function AdminPage() {
 
     const history = useHistory();
     const {user} = React.useContext(UserContext)
-    const isAdmin = user.isAdmin;
+    const isLoggedOn = user.isLoggedOn;
 
     // function to get all new released netflix data from the last 30 days then save it to the database 
     // onClick event which needs to be moved to the admin page when created
@@ -48,7 +48,7 @@ function AdminPage() {
     }, )
 
     function onLoad(){
-        if (isAdmin === true) {
+        if (isLoggedOn === "admin") {
             console.log("admin is authenticated")
         } else {
             console.log("not admin")

@@ -108,8 +108,9 @@ export default function SearchAppBar() {
             firstName: "",
             lastName: "",
             email: "",
-            isLoggedOn: false
+            isLoggedOn: "false"
         })
+        history.push("/")
     }
 
     return (
@@ -120,50 +121,80 @@ export default function SearchAppBar() {
                         Stream Finder
                     </Typography>
 
-                        {isLoggedOn ? (
-                            <>
-                                <div className={classes.search}>
-                                    <div className={classes.searchIcon}>
-                                        <SearchIcon />
+                    {(()=> {
+                        switch (isLoggedOn) {
+                            case "user":
+                                //  render is the user is logged in, search bar, welcome message and log out button
+                                return (
+                                    <>
+                                    <div className={classes.search}>
+                                        <div className={classes.searchIcon}>
+                                            <SearchIcon />
+                                        </div>
+                                        <InputBase
+                                            placeholder="Search…"
+                                            value={search}
+                                            onChange={e => setSearch(e.target.value)}
+                                            classes={{
+                                                root: classes.inputRoot,
+                                                input: classes.inputInput,
+                                            }}
+                                            inputProps={{ 'aria-label': 'search' }}
+                                        />
                                     </div>
-                                    <InputBase
-                                        placeholder="Search…"
-                                        value={search}
-                                        onChange={e => setSearch(e.target.value)}
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        inputProps={{ 'aria-label': 'search' }}
+                                    <Button 
+                                        variant="outlined"
+                                        color="secondary"
+                                        onClick={updateSearch} 
+                                    >
+                                        Search
+                                    </Button>
+                                    <div style={{
+                                        marginLeft: "10px"
+                                    }}>Welcome {user.firstName}</div>
+                                    <ExitToAppIcon 
+                                    onClick={handleLogout}
+                                    style={{
+                                        cursor: "pointer",
+                                        marginLeft: "10px"
+                                    }}
                                     />
-                                </div>
-                                <Button 
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={updateSearch} 
-                                >
-                                    Search
-                                </Button>
-                                <div style={{
-                                    marginLeft: "10px"
-                                }}>Welcome {user.firstName}</div>
-                                <ExitToAppIcon 
-                                onClick={handleLogout}
-                                style={{
-                                    cursor: "pointer",
-                                    marginLeft: "10px"
-                                }}
-                                />
-                            </>
-                        ): (
-                            <>
-                                <Button component={Link} to="/login">Login</Button>
-                                <Button component={Link} to="/signup">Sign Up</Button>
-                            </>
-                        )}
+                                    </>
+                                );
+                            
+                            case "admin":
+                                // if admin is logged in, return only logout and welcome admin
+                                return (
+                                    <>
+                                        <div style={{
+                                            marginLeft: "10px"
+                                        }}>Welcome {user.firstName}</div>
+                                        <ExitToAppIcon 
+                                        onClick={handleLogout}
+                                        style={{
+                                            cursor: "pointer",
+                                            marginLeft: "10px"
+                                        }}
+                                        />
+                                        <Button component={Link} to="/admin">Admin Page</Button>
+                                    </> 
+                                );
+
+                            case "false":
+                                // render the login and signup buttons if isloggedOn is set to the string false 
+                                return (
+                                    <div>
+                                        <Button component={Link} to="/login">Login</Button>
+                                        <Button component={Link} to="/signup">Sign Up</Button>
+                                    </div>  
+                                );
                         
+                            default:
+                                // if default do nothing
+                                break;
+                        }
+                    })()}
                    
-                    
                 </Toolbar>
             </AppBar>
         </div>

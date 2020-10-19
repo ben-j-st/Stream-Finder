@@ -56,6 +56,7 @@ export default function SignIn(props) {
             alert("email is empty")
             return
         } else if (login.email.toLowerCase().trim() === "admin") {
+            // login for admin
             API.login({
                 email: login.email.toLowerCase().trim(),
                 password: login.password
@@ -66,8 +67,7 @@ export default function SignIn(props) {
                     ...user,
                     firstName: response.firstName,
                     email: response.email,
-                    isLoggedOn: true,
-                    isAdmin: true
+                    isLoggedOn: "admin"
                 })
             })
             .then(()=>{
@@ -78,6 +78,7 @@ export default function SignIn(props) {
             })
             .catch(err => console.log(err))
         } else if (login.email.match(mailFormat)) {
+            // login for users
             API.login({
                 email: login.email,
                 password: login.password
@@ -90,7 +91,7 @@ export default function SignIn(props) {
                     firstName: response.firstName,
                     lastName: response.lastName,
                     email: response.email.toLowerCase().trim(),
-                    isLoggedOn: true
+                    isLoggedOn: "user"
                 })
             })
             .then(history.push("/"))

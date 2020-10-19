@@ -8,9 +8,8 @@ const initialState = {
     lastName: "",
     email: "",
     search: "",
-    isLoggedOn: false,
+    isLoggedOn: "false",
     lastSearch: "",
-    isAdmin: false,
     searchData: []
 }
 

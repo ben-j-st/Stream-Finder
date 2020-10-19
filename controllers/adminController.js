@@ -153,15 +153,15 @@ module.exports = {
         console.log("testing search")
         const optionsGoWatch = {
             method: 'POST',
-            url: 'https://rapidapi.p.rapidapi.com/lookup/title/tmdb_id',
-            params: {country: 'us', type: 'movie', id: '496243'},
+            url: 'https://rapidapi.p.rapidapi.com/lookup/title/imdb_id',
             headers: {
               'content-type': 'application/x-www-form-urlencoded',
               'x-rapidapi-host': 'gowatch.p.rapidapi.com',
               'x-rapidapi-key': 'd6e74a7f3dmshfffae2adaabd293p1034afjsneb507d0a99fd'
             },
-            data: {id: '496243', type: 'movie', country: 'us'}
+            data: {country: 'us', type: 'movie', id: 'tt6751668'}
           };
+          
 
         axios.request(optionsGoWatch)
         

@@ -1,5 +1,7 @@
 const db = require("../models");
 
+const session = require("express-session");
+
 // Defining methods for the userController
 
 module.exports = {
@@ -28,7 +30,9 @@ module.exports = {
                 email: req.body.email, 
                 password: req.body.password 
             })
-            .then(dbModal => res.json(dbModal))
+            .then(dbModal => {
+                res.json(dbModal)
+            })
             .catch(err => res.status(422).json(err))
     },
 
