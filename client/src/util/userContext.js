@@ -9,7 +9,9 @@ const initialState = {
     email: "",
     search: "",
     isLoggedOn: false,
-    lastSearch: ""
+    lastSearch: "",
+    isAdmin: false,
+    searchData: []
 }
 
 export function UserProvider(props) {
