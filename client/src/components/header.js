@@ -84,7 +84,7 @@ export default function SearchAppBar() {
     //     console.log(user)
     // }, [user] );
 
-    const updateSearch = (event) => {
+    const runSearch = (event) => {
         event.preventDefault();
         setUser({...user, search: search})
 
@@ -145,7 +145,7 @@ export default function SearchAppBar() {
                                     <Button 
                                         variant="outlined"
                                         color="secondary"
-                                        onClick={updateSearch} 
+                                        onClick={runSearch} 
                                     >
                                         Search
                                     </Button>
