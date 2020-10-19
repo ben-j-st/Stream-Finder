@@ -8,5 +8,8 @@ router.route("/")
 router.route("/login")
     .post(userController.findOne);
 
+router.route("/search/history")
+    .put(userController.updateSearchHistory);
+
 module.exports = router;
 
