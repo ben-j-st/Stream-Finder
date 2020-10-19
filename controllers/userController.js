@@ -30,6 +30,27 @@ module.exports = {
             })
             .then(dbModal => res.json(dbModal))
             .catch(err => res.status(422).json(err))
+    },
+
+    updateSearchHistory: function (req, res) {
+        console.log("trying to update search history")
+        // console.log(req.body)
+        db.User
+            .findOneAndUpdate(
+                {
+                    email: req.body.email
+                },
+                {
+                    $push: {
+                        searchHistory: req.body.search
+                    }
+                }
+            )
+            .then(dbModal => {
+                // console.log(dbModal)
+                res.json(dbModal)
+            })
+            .catch(err => res.status(422).json(err))
     }
 }
 
