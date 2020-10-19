@@ -79,7 +79,7 @@ export default function SignUp() {
                                 firstName: response.firstName,
                                 lastName: response.lastName,
                                 email: response.email,
-                                isLoggedOn: true,
+                                isLoggedOn: "user",
                             })
                         }
                     })
