@@ -6,10 +6,13 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import { Link } from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../util/userContext"
+import API from "../util/API";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,10 +71,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchAppBar() {
     const classes = useStyles();
+    const history = useHistory();
     
     const [search, setSearch] = React.useState("")
 
     const {user, setUser } = React.useContext(UserContext)
+
+    const isLoggedOn = user.isLoggedOn;
 
     // use to test is the user object is changed
     // React.useEffect(() => {
@@ -81,9 +87,30 @@ export default function SearchAppBar() {
     const updateSearch = (event) => {
         event.preventDefault();
         setUser({...user, search: search})
+
+        API.updateUserSearchHistory({
+            search: search,
+            email: user.email
+        })
+        .then(() => {
+            API.search({
+                searchRequest: search
+            })
+            .then(res => {
+                console.log(res.data)
+            })
+        })
     }
 
-    const isLoggedOn = user.isLoggedOn;
+    function handleLogout() {
+        setUser({
+            ...user,
+            firstName: "",
+            lastName: "",
+            email: "",
+            isLoggedOn: false
+        })
+    }
 
     return (
         <div className={classes.root}>
@@ -92,7 +119,6 @@ export default function SearchAppBar() {
                     <Typography component={Link} to="/" className={classes.title} variant="h6" noWrap>
                         Stream Finder
                     </Typography>
-                    
 
                         {isLoggedOn ? (
                             <>
@@ -121,6 +147,13 @@ export default function SearchAppBar() {
                                 <div style={{
                                     marginLeft: "10px"
                                 }}>Welcome {user.firstName}</div>
+                                <ExitToAppIcon 
+                                onClick={handleLogout}
+                                style={{
+                                    cursor: "pointer",
+                                    marginLeft: "10px"
+                                }}
+                                />
                             </>
                         ): (
                             <>
