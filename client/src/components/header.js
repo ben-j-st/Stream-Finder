@@ -18,8 +18,11 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
-    title: {
+    spacer: {
         flexGrow: 1,
+    },
+    title: {
+        
         display: 'none',
         [theme.breakpoints.up('sm')]: {
             display: 'block',
@@ -120,7 +123,9 @@ export default function SearchAppBar() {
                     <Typography component={Link} to="/" className={classes.title} variant="h6" noWrap>
                         Stream Finder
                     </Typography>
-
+                    
+                    <div className={classes.spacer} />
+                        
                     {(()=> {
                         switch (isLoggedOn) {
                             case "user":
