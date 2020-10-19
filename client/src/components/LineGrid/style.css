@@ -1,10 +1,22 @@
 .classes.gridList {
-    overflow: scroll
+    /* overflow: auto;
+    white-space: "nowrap"; */
 }
 
 ::-webkit-scrollbar {
+    width: 0;
     height: 0;
     background:transparent;
 }
 
+.classes.classes.gridList {
+    -webkit-overflow-scrolling: touch; /* Lets it scroll lazy */
+  }
+
 /* initial version, would like to have forward and back buttons  */
+
+
+.classes.centerIcon:hover {
+    background:black;
+    opacity: 60%;
+}
