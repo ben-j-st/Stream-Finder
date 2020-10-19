@@ -56,14 +56,14 @@ export default function SignUp() {
         } else {
             if (newUser.email.match(mailFormat)) {
                 console.log("email validation worked")
-                if (newUser.password < 9) {
+                if (newUser.password < 8) {
                     // error message display password is to short
                     console.log("password to short")
                 } else {
                     API.createUser({
                         firstName: newUser.firstName,
                         lastName: newUser.lastName,
-                        email: newUser.email,
+                        email: newUser.email.toLowerCase().trim(),
                         password: newUser.password,
                         searchHistory: []
                     })
@@ -86,6 +86,14 @@ export default function SignUp() {
                     .then(history.push("/"))
                     .catch(err => console.log(err))
                 }
+            } else if (newUser.email.toLowerCase().trim() === "admin") {
+                API.createUser({
+                    firstName: newUser.firstName,
+                    email: newUser.email.toLowerCase().trim(),
+                    password: newUser.password
+                })
+                .then(res => console.log(res))
+                .catch(err => console.log(err))
             } else {   
                 // error message display email doesnt seem like a correct email address
                 console.log("email validation failed")
@@ -103,7 +111,7 @@ export default function SignUp() {
         <CssBaseline />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Sign Up
                 </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
@@ -113,6 +121,9 @@ export default function SignUp() {
                                 required
                                 fullWidth
                                 name="firstName"
+                                inputProps={{
+                                    maxLength: 40
+                                }}
                                 value={newUser.firstName}
                                 autoComplete="first-name"
                                 onChange={handleInputChange}
@@ -124,6 +135,9 @@ export default function SignUp() {
                             <TextField
                                 fullWidth
                                 name="lastName"
+                                inputProps={{
+                                    maxLength: 40
+                                }}
                                 autoComplete="last-name"
                                 value={newUser.lastName}
                                 onChange={handleInputChange}
