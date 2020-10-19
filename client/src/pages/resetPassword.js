@@ -65,12 +65,15 @@ export default function SignIn() {
         <CssBaseline />
         <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-                Reset Password
+                Forgotten Password
             </Typography>
             <form className={classes.form} noValidate>
             
             { user.email ? (
                 <>
+                    <Typography component="h2" variant="h5">
+                        Please Enter New Password And Confirm
+                    </Typography>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -108,6 +111,9 @@ export default function SignIn() {
                 </>
             ) : (
                 <>
+                    <Typography component="h5" variant="h5">
+                        Please Enter Your Registered Email
+                    </Typography>
                     <TextField
                         variant="outlined"
                         margin="normal"
