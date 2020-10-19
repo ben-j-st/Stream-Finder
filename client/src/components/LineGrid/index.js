@@ -25,9 +25,14 @@ const useStyles = makeStyles((theme) => ({
     centerIcon: {
         display: "flex",
         margin: "auto",
+        height: "237px",
+    },
+    background: {
+        width: "auto",
         cursor: "pointer",
         '&:hover': {
-            background: "#f00",
+            background: "blue",
+            opacity: "30%",
         },
     }
 }));
@@ -70,10 +75,12 @@ function LineGrid({children}) {
             }}>
                 <Grid item xs={false} sm={1}>
                     <Hidden only="xs">
-                            <NavigateBeforeIcon  
-                                className={classes.centerIcon}
-                                onClick={() => handleNav("left")}
-                            />
+                        <div 
+                            className={classes.background}
+                            onClick={() => handleNav("left")}
+                        >
+                            <NavigateBeforeIcon  className={classes.centerIcon}/>
+                        </div>
                     </Hidden>
                 </Grid>
                 <Grid item xs={12} sm ={10}>
@@ -82,12 +89,14 @@ function LineGrid({children}) {
                     </GridList>
                 </Grid>
                 <Grid item xs={false} sm={1}>
-                    <Hidden only="xs">
-                        <NavigateNextIcon  
-                            className={classes.centerIcon}
-                            onClick={() => handleNav("right")}
-                        />
-                    </Hidden>
+                    <div 
+                        className={classes.background}
+                        onClick={() => handleNav("right")}
+                    >
+                        <Hidden only="xs">
+                            <NavigateNextIcon  className={classes.centerIcon}/>
+                        </Hidden>
+                    </div>
                 </Grid>
             </Grid>
             
