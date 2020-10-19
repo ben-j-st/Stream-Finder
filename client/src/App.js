@@ -33,7 +33,6 @@ function App() {
                     <Route path="/resetpassword" component={ResetPassword} />
                     {/* main page that loads first display basic data */}
                     <Route path="/" component={Main} />
-                    
                 </Switch>
             </UserProvider>
             <Footer />

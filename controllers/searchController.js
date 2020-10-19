@@ -34,36 +34,39 @@ module.exports = {
         axios.request(optionsIMDB)
             .then(function (response) {
 
-                // console.log(response.data)
+
+                // // console.log(response.data)
 
                 let imdbResponse = response.data.Search
-                console.log("trying for mapping")
 
-                imdbResponse.map(data => {
-                    id = data.imdbID
+                res.json(imdbResponse)
+                // console.log("trying for mapping")
 
-                    const optionsNetflix = {
-                        method: 'GET',
-                        url: 'https://rapidapi.p.rapidapi.com/title',
-                        params: {imdbid: `${id}`},
-                        headers: {
-                          'x-rapidapi-host': 'unogsng.p.rapidapi.com',
-                          'x-rapidapi-key': `${apiKeyNetflix}`
-                        }
-                    };
+                // imdbResponse.map(data => {
+                //     id = data.imdbID
+
+                //     const optionsNetflix = {
+                //         method: 'GET',
+                //         url: 'https://rapidapi.p.rapidapi.com/title',
+                //         params: {imdbid: `${id}`},
+                //         headers: {
+                //           'x-rapidapi-host': 'unogsng.p.rapidapi.com',
+                //           'x-rapidapi-key': `${apiKeyNetflix}`
+                //         }
+                //     };
                       
-                      axios.request(optionsNetflix)
-                        .then(function (response) {
-                            console.log("data entry \n")
-                            console.log(response.data.results[0]);
+                //       axios.request(optionsNetflix)
+                //         .then(function (response) {
+                //             console.log("data entry \n")
+                //             console.log(response.data.results[0]);
 
-                            res.json(response.data.results[0])
-                        }).catch(function (error) {
-                            console.error(error);
-                        });
-                })
-                .then(console.log(dataToBeReturned))
-                .then()
+                //             res.json(response.data.results[0])
+                //         }).catch(function (error) {
+                //             console.error(error);
+                //         });
+                // })
+                // .then(console.log(dataToBeReturned))
+                // .then()
             })
             .catch(function (error) {
                 console.error(error);

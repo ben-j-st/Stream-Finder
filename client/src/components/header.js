@@ -100,7 +100,17 @@ export default function SearchAppBar() {
                 searchRequest: search
             })
             .then(res => {
-                console.log(res.data)
+                console.log(res)
+                setUser({
+                    ...user,
+                    searchData: res.data
+                })
+            })
+            .then(()=>{
+                const timer = setTimeout(() => {
+                    history.push("/search")
+                }, 500);
+                return () => clearTimeout(timer);
             })
         })
     }
@@ -171,9 +181,6 @@ export default function SearchAppBar() {
                                 // if admin is logged in, return only logout and welcome admin
                                 return (
                                     <>
-                                        <div style={{
-                                            marginLeft: "10px"
-                                        }}>Welcome {user.firstName}</div>
                                         <ExitToAppIcon 
                                         onClick={handleLogout}
                                         style={{
@@ -181,6 +188,10 @@ export default function SearchAppBar() {
                                             marginLeft: "10px"
                                         }}
                                         />
+                                        <div style={{
+                                            marginLeft: "10px"
+                                        }}>Welcome {user.firstName}</div>
+                                        
                                         <Button component={Link} to="/admin">Admin Page</Button>
                                     </> 
                                 );
