@@ -50,23 +50,55 @@ export default function SignIn(props) {
     function handleLogin(event) {
         event.preventDefault();
 
-        API.login({
-            email: login.email,
-            password: login.password
-        })
-        .then( res => {
-            const response = res.data
-            console.log(res.data)
-            setUser({
-                ...user,
-                firstName: response.firstName,
-                lastName: response.lastName,
-                email: response.email,
-                isLoggedOn: true
+        let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        if (login.email === "") {
+            alert("email is empty")
+            return
+        } else if (login.email.toLowerCase().trim() === "admin") {
+            API.login({
+                email: login.email.toLowerCase().trim(),
+                password: login.password
             })
-        })
-        .then(history.push("/"))
-        .catch(err => console.error(err))
+            .then(res => {
+                const response = res.data
+                setUser({
+                    ...user,
+                    firstName: response.firstName,
+                    email: response.email,
+                    isLoggedOn: true,
+                    isAdmin: true
+                })
+            })
+            .then(()=>{
+                const timer = setTimeout(() => {
+                    history.push("/admin")
+                }, 100);
+                return () => clearTimeout(timer);
+            })
+            .catch(err => console.log(err))
+        } else if (login.email.match(mailFormat)) {
+            API.login({
+                email: login.email,
+                password: login.password
+            })
+            .then( res => {
+                const response = res.data
+                // console.log(res.data)
+                setUser({
+                    ...user,
+                    firstName: response.firstName,
+                    lastName: response.lastName,
+                    email: response.email.toLowerCase().trim(),
+                    isLoggedOn: true
+                })
+            })
+            .then(history.push("/"))
+            .catch(err => console.error(err))
+        } else {
+
+        }
+        
     }
     
     return (
@@ -74,7 +106,7 @@ export default function SignIn(props) {
         <CssBaseline />
         <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-            Sign in
+            Login
             </Typography>
             <form className={classes.form} noValidate>
             <TextField
