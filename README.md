@@ -8,8 +8,8 @@
 A React based app to search for movies or tv shows and the specific streaming platforms that they are available on 
 ## Links
 
-<a href="https://github.com/ben-j-st/Stream-Finder">React Profile/a>
-<a href="https://immense-wildwood-14301.herokuapp.com/">Live React Version</a>
+<a href="https://github.com/ben-j-st/Stream-Finder">React Profile</a>
+<a href="https://immense-wildwood-14301.herokuapp.com/">Live Herkou Version</a>
 
 
 ## Table of Contents
