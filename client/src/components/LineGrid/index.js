@@ -26,13 +26,13 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         margin: "auto",
         height: "237px",
+        color: "white",
     },
     background: {
         width: "auto",
         cursor: "pointer",
         '&:hover': {
-            background: "blue",
-            opacity: "30%",
+            background: "rgb(255,255,255,0.3)",
         },
     }
 }));
