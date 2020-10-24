@@ -16,12 +16,17 @@ import { UserContext } from "../util/userContext";
 
 import API from "../util/API";
 
+
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        backgroundColor: "white",
+        padding: "50px",
+        borderRadius: "15px 40px"
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -30,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    textColor: {
+        color: "black"
+    }
 }));
 
 export default function SignUp() {
@@ -110,7 +118,7 @@ export default function SignUp() {
         <Container component="main" maxWidth="xs">
         <CssBaseline />
             <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h5" style={{color: "black"}}>
                     Sign Up
                 </Typography>
                 <form className={classes.form} noValidate>
@@ -120,6 +128,9 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
+                                style={{
+                                    background: "white"
+                                }}
                                 name="firstName"
                                 inputProps={{
                                     maxLength: 40
@@ -129,6 +140,9 @@ export default function SignUp() {
                                 onChange={handleInputChange}
                                 label="First Name"
                                 autoFocus
+                                InputProps={{
+                                    className: classes.textColor
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -143,6 +157,9 @@ export default function SignUp() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 label="Last Name"
+                                InputProps={{
+                                    className: classes.textColor
+                                }}
                             />
                             </Grid>
                         <Grid item xs={12}>
@@ -155,6 +172,9 @@ export default function SignUp() {
                                 value={newUser.email}
                                 onChange={handleInputChange}
                                 label="Email Address"
+                                InputProps={{
+                                    className: classes.textColor
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -168,6 +188,9 @@ export default function SignUp() {
                                 onChange={handleInputChange}
                                 label="Password"
                                 type="password"
+                                InputProps={{
+                                    className: classes.textColor
+                                }}
                             />
                         </Grid>
                     </Grid>
@@ -175,7 +198,7 @@ export default function SignUp() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         className={classes.submit}
                         onClick={handleSubmit}
                     >
