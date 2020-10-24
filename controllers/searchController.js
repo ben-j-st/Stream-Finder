@@ -1,5 +1,6 @@
 const db = require("../models");
-const axios = require("axios")
+const axios = require("axios");
+const e = require("express");
 
 require('dotenv').config()
 
@@ -11,9 +12,6 @@ const apiKeyNetflix = process.env.NETFLIX_API;
 
 let type = ''
 let id = ''
-
-let dataToBeReturned = []
-
 
 module.exports = {
     search: function(req, res) {
@@ -35,38 +33,62 @@ module.exports = {
             .then(function (response) {
 
 
-                // // console.log(response.data)
+                // console.log(response.data)
 
                 let imdbResponse = response.data.Search
 
-                res.json(imdbResponse)
-                // console.log("trying for mapping")
+                // get a list of requests for the promise all 
+                let requests = imdbResponse.map(individualData => {
+                    type = individualData.Type
+                    id = individualData.imdbID
 
-                // imdbResponse.map(data => {
-                //     id = data.imdbID
+                    // test to see if the data is being mapped correctly  
+                    // console.log(`Title: ${individualData.Title}\nType: ${type} \nID: ${id}` )
 
-                //     const optionsNetflix = {
-                //         method: 'GET',
-                //         url: 'https://rapidapi.p.rapidapi.com/title',
-                //         params: {imdbid: `${id}`},
-                //         headers: {
-                //           'x-rapidapi-host': 'unogsng.p.rapidapi.com',
-                //           'x-rapidapi-key': `${apiKeyNetflix}`
-                //         }
-                //     };
-                      
-                //       axios.request(optionsNetflix)
-                //         .then(function (response) {
-                //             console.log("data entry \n")
-                //             console.log(response.data.results[0]);
+                    const optionsGoWatch = {
+                        method: 'POST',
+                        url: 'https://rapidapi.p.rapidapi.com/lookup/title/imdb_id',
+                        headers: {
+                          'content-type': 'application/x-www-form-urlencoded',
+                          'x-rapidapi-host': 'gowatch.p.rapidapi.com',
+                          'x-rapidapi-key': `${apiKeyGoWatch}`
+                        },
+                        data: {country: 'au', type: `${type}`, id: `${id}`}
+                    };
 
-                //             res.json(response.data.results[0])
-                //         }).catch(function (error) {
-                //             console.error(error);
-                //         });
-                // })
-                // .then(console.log(dataToBeReturned))
-                // .then()
+                    return axios.request(optionsGoWatch)
+                    .then(goWatchResults => {
+                        if(goWatchResults.data.message === 'not found') {
+                            return {
+                                success: false
+                            }
+                        } else {
+                            return {
+                                success: true,
+                                data: goWatchResults.data
+                            }
+                        }        
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                })
+                
+                // a collection of request is sent to the promise handler, it waits until all have been settled
+                Promise.all(requests)
+                .then(promiseResponses => {
+                    let filteredResponse = promiseResponses.filter(p => {
+                       if (p.success === true) {
+                           return p
+                       }
+                    })
+                    return filteredResponse
+                })
+                .then(newResponse => {
+                    console.log(newResponse[0].data.offers)
+                    res.json(newResponse)
+                })
+                .catch(err=> console.log(err))
             })
             .catch(function (error) {
                 console.error(error);
@@ -74,26 +96,4 @@ module.exports = {
     },
 }
 
-  // imdbResponse.map(individualData => {
-                //     type = individualData.Type
-                //     id = individualData.imdbID
-
-                //     const optionsGoWatch = {
-                //         method: 'POST',
-                //         url: 'https://rapidapi.p.rapidapi.com/lookup/title/imdb_id',
-                //         headers: {
-                //           'content-type': 'application/x-www-form-urlencoded',
-                //           'x-rapidapi-host': 'gowatch.p.rapidapi.com',
-                //           'x-rapidapi-key': `${apiKeyGoWatch}`
-                //         },
-                //         data: {country: 'au', type: `${type}`, id: `${id}`}
-                //     };
-
-                //     axios.request(optionsGoWatch)
-                    
-                //     .then(function (responseGoWatch) {
-                //         console.log(responseGoWatch.data.name)
-                //     }).catch(function (error) {
-                //         console.error(error);
-                //     });
-                // })
+  
