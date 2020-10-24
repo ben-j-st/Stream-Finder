@@ -22,14 +22,12 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     title: {
-        
-        display: 'none',
+        textDecoration: "none",
+        color: "white",
+        display: "none",
         [theme.breakpoints.up('sm')]: {
             display: 'block',
         },
-        textDecoration: "none",
-        color: "white"
-
     },
     search: {
         position: 'relative',
@@ -70,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
+    button: {
+        color: "white",
+        borderColor: "white",
+    }
 }));
 
 export default function SearchAppBar() {
@@ -100,7 +102,7 @@ export default function SearchAppBar() {
                 searchRequest: search
             })
             .then(res => {
-                console.log(res)
+                console.log(res.data)
                 setUser({
                     ...user,
                     searchData: res.data
@@ -108,11 +110,14 @@ export default function SearchAppBar() {
             })
             .then(()=>{
                 const timer = setTimeout(() => {
+                    setSearch("")
                     history.push("/search")
                 }, 500);
                 return () => clearTimeout(timer);
             })
+            .catch(err => console.log(err))
         })
+
     }
 
     function handleLogout() {
@@ -149,6 +154,7 @@ export default function SearchAppBar() {
                                         <InputBase
                                             placeholder="Search…"
                                             value={search}
+                                            autoFocus
                                             onChange={e => setSearch(e.target.value)}
                                             classes={{
                                                 root: classes.inputRoot,
@@ -159,13 +165,14 @@ export default function SearchAppBar() {
                                     </div>
                                     <Button 
                                         variant="outlined"
-                                        color="secondary"
+                                        className={classes.button}
                                         onClick={runSearch} 
                                     >
                                         Search
                                     </Button>
                                     <div style={{
-                                        marginLeft: "10px"
+                                        marginLeft: "10px",
+                                        color: "white"
                                     }}>Welcome {user.firstName}</div>
                                     <ExitToAppIcon 
                                     onClick={handleLogout}
@@ -181,6 +188,10 @@ export default function SearchAppBar() {
                                 // if admin is logged in, return only logout and welcome admin
                                 return (
                                     <>
+                                        <div style={{
+                                            marginLeft: "10px"
+                                        }}>Welcome {user.firstName}</div>
+
                                         <ExitToAppIcon 
                                         onClick={handleLogout}
                                         style={{
@@ -188,11 +199,11 @@ export default function SearchAppBar() {
                                             marginLeft: "10px"
                                         }}
                                         />
-                                        <div style={{
-                                            marginLeft: "10px"
-                                        }}>Welcome {user.firstName}</div>
                                         
-                                        <Button component={Link} to="/admin">Admin Page</Button>
+                                        <Button 
+                                            className={classes.button}
+                                            component={Link}
+                                            to="/admin">Admin Page</Button>
                                     </> 
                                 );
 
@@ -200,8 +211,15 @@ export default function SearchAppBar() {
                                 // render the login and signup buttons if isloggedOn is set to the string false 
                                 return (
                                     <div>
-                                        <Button component={Link} to="/login">Login</Button>
-                                        <Button component={Link} to="/signup">Sign Up</Button>
+                                        <Button
+                                            className={classes.button}
+                                            component={Link}
+                                            to="/login" 
+                                            >Login</Button>
+                                        <Button 
+                                            className={classes.button}
+                                            component={Link} 
+                                            to="/signup">Sign Up</Button>
                                     </div>  
                                 );
                         
