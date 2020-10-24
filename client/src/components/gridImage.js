@@ -5,9 +5,9 @@ function GridImage(props) {
 
     return (
         <GridListTile key={props.key}>
-          <img src={props.img} alt={props.title} style={{
-              maxHeight: "237px"
-          }}/>
+            <img src={props.img} alt={props.title} style={{
+                maxHeight: "237px"
+            }}/>
         </GridListTile>
     )
         
