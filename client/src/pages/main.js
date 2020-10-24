@@ -2,10 +2,25 @@ import React, { useState, useEffect } from "react";
 import API from "../util/API";
 import LineGrid from "../components/LineGrid"
 import GridImage from "../components/gridImage"
+import { makeStyles } from '@material-ui/core/styles';
 
-function Main(props) {
+import netflixLogo from "../logo/netflix.png"
+import primeLogo from "../logo/prime.png"
+
+
+const useStyles = makeStyles((theme) => ({
+    image: {
+        marginTop: "30px",
+        height: "50px",
+        width: "auto"
+    }
+}));
+ 
+function Main() {
     //the search value is props.search
 
+
+    const classes = useStyles();
     // used to store the netflix data in an array to be mapped to the database for faster loading 
     const [netflix, setNetflix] = useState([])
 
@@ -30,7 +45,7 @@ function Main(props) {
   
     return (
         <>
-            <h2>Netflix</h2>
+            <img src={netflixLogo} alt="netflix" className={classes.image}/>
             <LineGrid>
                 {netflix.length ? (
                     netflix.map( result => (
@@ -45,7 +60,7 @@ function Main(props) {
                 )}
             </LineGrid>
 
-            <h2>Amazon Prime</h2>
+            <img src={primeLogo} alt="amazon prime" className={classes.image}/>
             <LineGrid>
                 {amazon.length ? (
                     amazon.map( result => (
