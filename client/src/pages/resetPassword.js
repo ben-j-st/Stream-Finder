@@ -7,12 +7,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        backgroundColor: "white",
+        padding: "50px",
+        borderRadius: "20px"
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -21,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    textColor: {
+        color: "black"
+    }
 }));
 
 export default function SignIn() {
@@ -64,14 +71,14 @@ export default function SignIn() {
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" style={{color: "black"}}>
                 Forgotten Password
             </Typography>
             <form className={classes.form} noValidate>
             
             { user.email ? (
                 <>
-                    <Typography component="h2" variant="h5">
+                    <Typography component="h2" variant="h5" style={{color: "black"}}>
                         Please Enter New Password And Confirm
                     </Typography>
                     <TextField
@@ -85,6 +92,9 @@ export default function SignIn() {
                         onChange={handleInputChange}
                         label="New Password"
                         type="password"
+                        InputProps={{
+                            className: classes.textColor
+                        }}
                     />
                     <TextField
                         variant="outlined"
@@ -97,12 +107,15 @@ export default function SignIn() {
                         value={user.confirmPassword}
                         label="Confirm Password"
                         type="password"
+                        InputProps={{
+                            className: classes.textColor
+                        }}
                     />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         className={classes.submit}
                         onClick={resetPassword}
                     >
@@ -111,7 +124,7 @@ export default function SignIn() {
                 </>
             ) : (
                 <>
-                    <Typography component="h5" variant="h5">
+                    <Typography component="h5" variant="h5" style={{color: "black"}}>
                         Please Enter Your Registered Email
                     </Typography>
                     <TextField
@@ -125,12 +138,15 @@ export default function SignIn() {
                         onChange={handleInputChange}
                         label="Email Address"
                         autoFocus
+                        InputProps={{
+                            className: classes.textColor
+                        }}
                     />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         className={classes.submit}
                         onClick={handleEmail}
                     >
