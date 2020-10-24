@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -15,23 +16,35 @@ import { UserContext } from "../util/userContext"
 import { Link } from "react-router-dom";
 import API from '../util/API';
 
+// import SearchSeed from "../util/search.json"
+
+
+
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: "white",
+        padding: "50px",
+        borderRadius: "15px 40px"
+    },
+     form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+    textColor: {
+        color: "black"
+    }
+      
+
 }));
 
-export default function SignIn(props) {
+export default function SignIn() {
     const classes = useStyles();
     const history = useHistory();
 
@@ -84,6 +97,7 @@ export default function SignIn(props) {
                 password: login.password
             })
             .then( res => {
+                // need to remove searchSeed and .then and replace
                 const response = res.data
                 // console.log(res.data)
                 setUser({
@@ -91,10 +105,17 @@ export default function SignIn(props) {
                     firstName: response.firstName,
                     lastName: response.lastName,
                     email: response.email.toLowerCase().trim(),
-                    isLoggedOn: "user"
+                    isLoggedOn: "user",
+                    // searchData: SearchSeed
                 })
             })
             .then(history.push("/"))
+            // .then(()=>{
+            //     const timer = setTimeout(() => {
+            //         history.push("/search")
+            //     }, 100);
+            //     return () => clearTimeout(timer);
+            // })
             .catch(err => console.error(err))
         } else {
 
@@ -103,10 +124,10 @@ export default function SignIn(props) {
     }
     
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" >
         <CssBaseline />
         <div className={classes.paper}>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" style={{color: "black"}}>
             Login
             </Typography>
             <form className={classes.form} noValidate>
@@ -121,6 +142,9 @@ export default function SignIn(props) {
                 onChange={handleInputChange}
                 label="Email Address"
                 autoFocus
+                InputProps={{
+                    className: classes.textColor
+                }}
             />
             <TextField
                 variant="outlined"
@@ -133,6 +157,9 @@ export default function SignIn(props) {
                 onChange={handleInputChange}
                 label="Password"
                 type="password"
+                InputProps={{
+                    className: classes.textColor
+                }}
 
             />
             
@@ -140,7 +167,7 @@ export default function SignIn(props) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="secondary"
                 onClick={handleLogin}
                 className={classes.submit}
             >
