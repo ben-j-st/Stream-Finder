@@ -7,6 +7,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import { Link } from "react-router-dom"
 import { useHistory } from "react-router-dom";
@@ -78,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchAppBar() {
     const classes = useStyles();
     const history = useHistory();
+
+    let searchError = false;
+    let searchMessage =""
     
     const [search, setSearch] = React.useState("")
 
@@ -90,35 +94,50 @@ export default function SearchAppBar() {
     //     console.log(user)
     // }, [user] );
 
+    function timerClearMessage() {
+        const messageTimer = setTimeout(() => {
+            searchError=false
+            searchMessage=""
+        }, 3000);
+        return () => clearTimeout(messageTimer);
+    }
+
     const runSearch = (event) => {
         event.preventDefault();
-        setUser({...user, search: search})
 
-        API.updateUserSearchHistory({
-            search: search,
-            email: user.email
-        })
-        .then(() => {
-            API.search({
-                searchRequest: search
+        if(search === "") {
+            console.log("trying to set message")
+            // searchError = true;
+            // searchMessage = "You Must Enter Something To Search"
+            // timerClearMessage()
+        } else {
+            setUser({...user, search: search})
+
+            API.updateUserSearchHistory({
+                search: search,
+                email: user.email
             })
-            .then(res => {
-                console.log(res.data)
-                setUser({
-                    ...user,
-                    searchData: res.data
+            .then(() => {
+                API.search({
+                    searchRequest: search
                 })
+                .then(res => {
+                    console.log(res.data)
+                    setUser({
+                        ...user,
+                        searchData: res.data
+                    })
+                })
+                .then(()=>{
+                    const timer = setTimeout(() => {
+                        setSearch("")
+                        history.push("/search")
+                    }, 500);
+                    return () => clearTimeout(timer);
+                })
+                .catch(err => console.log(err))
             })
-            .then(()=>{
-                const timer = setTimeout(() => {
-                    setSearch("")
-                    history.push("/search")
-                }, 500);
-                return () => clearTimeout(timer);
-            })
-            .catch(err => console.log(err))
-        })
-
+        }
     }
 
     function handleLogout() {
