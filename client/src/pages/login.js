@@ -2,7 +2,6 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import MLink from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -16,8 +15,7 @@ import { UserContext } from "../util/userContext"
 import { Link } from "react-router-dom";
 import API from '../util/API';
 
-// import SearchSeed from "../util/search.json"
-
+import InputField from "../components/inputField";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,14 +37,20 @@ const useStyles = makeStyles((theme) => ({
     },
     textColor: {
         color: "black"
+    },
+    spacer: {
+        [theme.breakpoints.down('sm')]: {
+            height: "70px",
+        }
     }
-      
-
 }));
 
 export default function SignIn() {
     const classes = useStyles();
     const history = useHistory();
+    
+
+    let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
     const [login, setLogin] = React.useState({
         email: "",
@@ -55,26 +59,46 @@ export default function SignIn() {
 
     const {user, setUser } = React.useContext(UserContext)
 
+    const [errors, setErrors ] = React.useState({})
+
     function handleInputChange(event) {
         const { name, value } = event.target
         setLogin({...login, [name]: value})
     }
 
-    function handleLogin(event) {
-        event.preventDefault();
+    function validate() {
+        let temp = {}
 
-        let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        temp.email = (mailFormat).test(login.email)?"":"Email Is Not Valid"
+        temp.password = login.password.length>7?"":"Password Must Be 8 Characters or More"
+        setErrors({
+            ...temp
+        })
 
-        if (login.email === "") {
-            alert("email is empty")
-            return
-        } else if (login.email.toLowerCase().trim() === "admin") {
-            // login for admin
-            API.login({
-                email: login.email.toLowerCase().trim(),
-                password: login.password
-            })
-            .then(res => {
+        return Object.values(temp).every(x => x === "")
+    }
+
+    function timerClearMessage() {
+        const messageTimer = setTimeout(() => {
+            setErrors({})
+        }, 5000);
+        return () => clearTimeout(messageTimer);
+    }
+
+    function adminLogin() {
+        // login for admin
+        API.login({
+            email: login.email.toLowerCase().trim(),
+            password: login.password
+        })
+        .then(res => {
+            if (res.data === null) {
+                setErrors({
+                    email: "Incorrect Login Details",
+                    password: "Incorrect Login Details"
+                })
+                timerClearMessage()
+            } else {
                 const response = res.data
                 setUser({
                     ...user,
@@ -82,22 +106,29 @@ export default function SignIn() {
                     email: response.email,
                     isLoggedOn: "admin"
                 })
-            })
-            .then(()=>{
-                const timer = setTimeout(() => {
-                    history.push("/admin")
-                }, 100);
-                return () => clearTimeout(timer);
-            })
-            .catch(err => console.log(err))
-        } else if (login.email.match(mailFormat)) {
-            // login for users
-            API.login({
-                email: login.email,
-                password: login.password
-            })
-            .then( res => {
-                // need to remove searchSeed and .then and replace
+                    const timer = setTimeout(() => {
+                        history.push("/admin")
+                    }, 100);
+                    return () => clearTimeout(timer);
+            }
+            
+        })
+        .catch(err => console.log(err))
+    }
+
+    function userLogin() {
+        API.login({
+            email: login.email,
+            password: login.password
+        })
+        .then( res => {
+            if(res.data === null) {
+                setErrors({
+                    email: "Incorrect Login Details",
+                    password: "Incorrect Login Details"
+                })
+                timerClearMessage()
+            } else {
                 const response = res.data
                 // console.log(res.data)
                 setUser({
@@ -106,21 +137,25 @@ export default function SignIn() {
                     lastName: response.lastName,
                     email: response.email.toLowerCase().trim(),
                     isLoggedOn: "user",
-                    // searchData: SearchSeed
                 })
-            })
-            .then(history.push("/"))
-            // .then(()=>{
-            //     const timer = setTimeout(() => {
-            //         history.push("/search")
-            //     }, 100);
-            //     return () => clearTimeout(timer);
-            // })
-            .catch(err => console.error(err))
-        } else {
+                history.push("/")
+            }
+        })
+        .catch(err => console.error(err))
+    }
 
+    function handleLogin(event) {
+        event.preventDefault();
+
+        if(validate()) {
+            if(login.email.toLowerCase().trim() === "admin@admin.com"){
+                adminLogin()
+            } else {
+                userLogin()
+            }
+        } else {
+            timerClearMessage()
         }
-        
     }
     
     return (
@@ -130,18 +165,34 @@ export default function SignIn() {
             <Typography component="h1" variant="h5" style={{color: "black"}}>
             Login
             </Typography>
-            <form className={classes.form} noValidate>
-            <TextField
+            <form className={classes.form} autoComplete="off">
+                <InputField 
+                name="email"
+                label="Email"
+                autoFocus
+                required
+                onChange={handleInputChange}
+                error={errors.email}
+                />
+                <InputField 
+                name="password"
+                label="Password"
+                type="Password"
+                required
+                onChange={handleInputChange}
+                error={errors.password}
+                />
+            {/* <TextField
                 variant="outlined"
                 margin="normal"
                 required
-                fullWidth
-                autoComplete="email"
+               
+                helperText={error.email ? message.email : ' '}
                 name="email"
                 value={login.email}
                 onChange={handleInputChange}
                 label="Email Address"
-                autoFocus
+                // autoFocus
                 InputProps={{
                     className: classes.textColor
                 }}
@@ -150,9 +201,8 @@ export default function SignIn() {
                 variant="outlined"
                 margin="normal"
                 required
-                fullWidth
                 name="password"
-                autoComplete= "current-password"
+                helperText={error.password ? message.password : ' '}
                 value={login.password}
                 onChange={handleInputChange}
                 label="Password"
@@ -161,7 +211,7 @@ export default function SignIn() {
                     className: classes.textColor
                 }}
 
-            />
+            /> */}
             
             <Button
                 type="submit"
@@ -187,6 +237,7 @@ export default function SignIn() {
             </Grid>
             </form>
         </div>
+        <div className={classes.spacer} />
         </Container>
     );
 }
