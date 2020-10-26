@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "../util/userContext"
 import API from "../util/API";
 
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -92,6 +93,7 @@ export default function SearchAppBar() {
     const runSearch = (event) => {
         event.preventDefault();
         setUser({...user, search: search})
+        console.log("trying to run search")
 
         API.updateUserSearchHistory({
             search: search,
