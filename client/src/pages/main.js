@@ -71,7 +71,7 @@ function Main() {
                         />
                     ))
                 ) : (
-                    <h1>Failed to get results</h1>
+                    <h1>Contacting Database</h1>
                 )}
             </LineGrid>
             <div className="spaceBuffer" style={{
