@@ -31,14 +31,13 @@ function SearchPage() {
             <Grid container justify="center" spacing={1}>
                 {searchData.length ? (
                     searchData.map(element => (
-                       
-                            <SearchCard
+                        <SearchCard
                             key={element.data.imdb_id} 
                             title={element.data.name}
                             image={element.data.offers[0].image}
                             description={element.data.desc}
                             offers={element.data.offers}
-                            />
+                        />
                         
                     ))
                 ) : (
