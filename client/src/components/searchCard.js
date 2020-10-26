@@ -51,7 +51,7 @@ export default function MediaCard(props) {
                     </Typography>
                     <br/>
                     {provider.length ? (
-                        provider.map(item => () => {
+                        provider.map(item => {
                             if(item.flat === 1) {
                                 switch (item.provider) {
                                     case "disneyplus":
