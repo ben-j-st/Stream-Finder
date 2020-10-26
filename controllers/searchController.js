@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const apiKeyGoWatch = process.env.GOWATCH_API;
 const apiKeyIMDB = process.env.IMDB_API
-const apiKeyNetflix = process.env.NETFLIX_API;
+
 
 // Defining methods for the netflixController
 
