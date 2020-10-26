@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import MLink from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -16,6 +15,7 @@ import { UserContext } from "../util/userContext";
 
 import API from "../util/API";
 
+import InputField from "../components/inputField";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,12 +37,18 @@ const useStyles = makeStyles((theme) => ({
     },
     textColor: {
         color: "black"
+    },
+    spacer: {
+        [theme.breakpoints.down('sm')]: {
+            height: "70px",
+        }
     }
 }));
 
 export default function SignUp() {
     const classes = useStyles();
     const history = useHistory();
+    let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     
     const [newUser, setNewUser]= React.useState({
         firstName: "",
@@ -51,62 +57,71 @@ export default function SignUp() {
         password: ""
     })
 
+    const [errors, setErrors ] = React.useState({})
     const {user, setUser } = React.useContext(UserContext)
+
+    function validate() {
+        let temp = {}
+        temp.firstName = newUser.firstName?"":"You must Enter a First Name"
+        temp.email = (mailFormat).test(newUser.email)?"":"Email Is Not Valid"
+        temp.password = newUser.password.length>7?"":"Password Must Be 8 Characters or More"
+
+        setErrors({
+            ...temp
+        })
+
+        return Object.values(temp).every(x => x === "")
+    }
+
+    function timerClearMessage() {
+        const messageTimer = setTimeout(() => {
+            setErrors({})
+        }, 5000);
+        return () => clearTimeout(messageTimer);
+    }
+
+    function createUser() {
+        API.createUser({
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            email: newUser.email.toLowerCase().trim(),
+            password: newUser.password,
+            searchHistory: []
+        })
+        .then(res => {
+            const response = res.data
+            if (response.email === 1) {
+                setErrors({
+                    email: "This email address is already in use"
+                })
+                timerClearMessage()
+            } else {
+                // user data updated to reflect logged in user
+                setUser({
+                    ...user,
+                    firstName: response.firstName,
+                    lastName: response.lastName,
+                    email: response.email,
+                    isLoggedOn: "user",
+                })
+                history.push("/")
+            }       
+        })
+        .catch(err => console.log(err))
+    }
+    
     
     function handleSubmit(event) {
         event.preventDefault()
 
-        let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-        if (newUser.firstName.length === 0 ) {
-            // error message display firstName is required
-            console.log("we need a first name ")
+        if (validate()){
+            console.log("valid")
+            createUser()
         } else {
-            if (newUser.email.match(mailFormat)) {
-                console.log("email validation worked")
-                if (newUser.password < 8) {
-                    // error message display password is to short
-                    console.log("password to short")
-                } else {
-                    API.createUser({
-                        firstName: newUser.firstName,
-                        lastName: newUser.lastName,
-                        email: newUser.email.toLowerCase().trim(),
-                        password: newUser.password,
-                        searchHistory: []
-                    })
-                    .then(res => {
-                        console.log(res.data)
-                        const response = res.data
-                        if (response.email === 1) {
-                            alert("Same email has been used")
-                        } else {
-                            // user data updated to reflect logged in user
-                            setUser({
-                                ...user,
-                                firstName: response.firstName,
-                                lastName: response.lastName,
-                                email: response.email,
-                                isLoggedOn: "user",
-                            })
-                        }
-                    })
-                    .then(history.push("/"))
-                    .catch(err => console.log(err))
-                }
-            } else if (newUser.email.toLowerCase().trim() === "admin") {
-                API.createUser({
-                    firstName: newUser.firstName,
-                    email: newUser.email.toLowerCase().trim(),
-                    password: newUser.password
-                })
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
-            } else {   
-                // error message display email doesnt seem like a correct email address
-                console.log("email validation failed")
-            }
+            console.log("failed validation")
+            timerClearMessage()
         }
+        
     }
 
     function handleInputChange(event) {
@@ -121,76 +136,46 @@ export default function SignUp() {
                 <Typography component="h1" variant="h5" style={{color: "black"}}>
                     Sign Up
                 </Typography>
-                <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
+                <form className={classes.form} autoComplete="off">
+                    <Grid container spacing={1}>
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                style={{
-                                    background: "white"
-                                }}
+                            <InputField 
                                 name="firstName"
-                                inputProps={{
-                                    maxLength: 40
-                                }}
-                                value={newUser.firstName}
-                                autoComplete="first-name"
-                                onChange={handleInputChange}
                                 label="First Name"
                                 autoFocus
-                                InputProps={{
-                                    className: classes.textColor
-                                }}
+                                required
+                                value={newUser.firstName}
+                                onChange={handleInputChange}
+                                error={errors.firstName}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
+                            <InputField 
                                 name="lastName"
-                                inputProps={{
-                                    maxLength: 40
-                                }}
-                                autoComplete="last-name"
+                                label="Last Name"
                                 value={newUser.lastName}
                                 onChange={handleInputChange}
-                                variant="outlined"
-                                label="Last Name"
-                                InputProps={{
-                                    className: classes.textColor
-                                }}
-                            />
-                            </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="email"
-                                autoComplete="email"
-                                value={newUser.email}
-                                onChange={handleInputChange}
-                                label="Email Address"
-                                InputProps={{
-                                    className: classes.textColor
-                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
+                            <InputField 
+                                name="email"
+                                label="Email Address"
                                 required
-                                fullWidth
+                                value={newUser.email}
+                                onChange={handleInputChange}
+                                error={errors.email}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputField 
                                 name="password"
-                                autoComplete="current-password"
+                                label="Password"
+                                type="Password"
+                                required
                                 value={newUser.password}
                                 onChange={handleInputChange}
-                                label="Password"
-                                type="password"
-                                InputProps={{
-                                    className: classes.textColor
-                                }}
+                                error={errors.password}
                             />
                         </Grid>
                     </Grid>
@@ -213,6 +198,7 @@ export default function SignUp() {
                     </Grid>
                 </form>
             </div>
+            <div className={classes.spacer} />
         </Container>
     );
 }
