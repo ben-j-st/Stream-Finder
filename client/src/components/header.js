@@ -93,7 +93,6 @@ export default function SearchAppBar() {
     const runSearch = (event) => {
         event.preventDefault();
         setUser({...user, search: search})
-        console.log("trying to run search")
 
         API.updateUserSearchHistory({
             search: search,
