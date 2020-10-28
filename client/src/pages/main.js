@@ -53,6 +53,8 @@ function Main() {
                         key={result.netflixid}
                         img={result.image}
                         title={result.title}
+                        description={result.synopsis}
+                        result={result}
                         />
                     ))
                 ) : (
@@ -68,10 +70,13 @@ function Main() {
                         key={result._id}
                         img={result.Poster}
                         title={result.Title}
+                        result={result}
+                        description={result.Plot}
+                        Link={result.Link}
                         />
                     ))
                 ) : (
-                    <h1>Contacting Database</h1>
+                    <h1>Retrieving Data From The Database</h1>
                 )}
             </LineGrid>
             <div className="spaceBuffer" style={{
