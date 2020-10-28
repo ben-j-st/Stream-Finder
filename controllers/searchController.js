@@ -85,7 +85,6 @@ module.exports = {
                     return filteredResponse
                 })
                 .then(newResponse => {
-                    console.log(newResponse[0].data.offers)
                     res.json(newResponse)
                 })
                 .catch(err=> console.log(err))
