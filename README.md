@@ -5,7 +5,8 @@
 
 ## Description 
 
-A React based app to search for movies or tv shows and the specific streaming platforms that they are available on 
+MERN Stack application to allow users to search for through the various API's to check if that particular movie is availble on any of the Streaming Services API's that i was able to access. Check out the Links below for a better idea of this application 
+
 ## Links
 
 <a href="https://github.com/ben-j-st/Stream-Finder">React Profile</a>
